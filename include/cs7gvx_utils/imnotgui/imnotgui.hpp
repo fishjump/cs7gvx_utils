@@ -2,6 +2,9 @@
 
 #include <cs7gvx_utils/gl.hpp>
 
+#include "imgui/imconfig.h"
+#include "imgui/imgui.h"
+
 namespace cs7gvx_utils::imnotgui {
 
 class window_t {

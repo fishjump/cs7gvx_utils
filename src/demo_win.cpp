@@ -4,7 +4,7 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/imgui.h>
 
-void imnotgui::demo_window_t::refresh() {
+void cs7gvx_utils::imnotgui::demo_window_t::refresh() {
   {
     static float f = 0.0f;
     static int counter = 0;

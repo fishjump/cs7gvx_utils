@@ -2,7 +2,7 @@
 
 #include <gl.hpp>
 
-namespace imnotgui {
+namespace cs7gvx_utils::imnotgui {
 
 class window_t {
 public:
@@ -24,4 +24,4 @@ void init(GLFWwindow *window);
 void render();
 void register_window(window_t *window);
 
-} // namespace imnotgui
+} // namespace cs7gvx_utils::imnotgui

@@ -9,13 +9,13 @@
 
 namespace {
 
-std::unordered_set<imnotgui::window_t *> windows;
+std::unordered_set<cs7gvx_utils::imnotgui::window_t *> windows;
 
 }
 
-imnotgui::window_t::window_t() { register_window(this); }
+cs7gvx_utils::imnotgui::window_t::window_t() { register_window(this); }
 
-void imnotgui::init(GLFWwindow *window) {
+void cs7gvx_utils::imnotgui::init(GLFWwindow *window) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
@@ -23,7 +23,7 @@ void imnotgui::init(GLFWwindow *window) {
   ImGui_ImplOpenGL3_Init();
 }
 
-void imnotgui::render() {
+void cs7gvx_utils::imnotgui::render() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -36,6 +36,7 @@ void imnotgui::render() {
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void imnotgui::register_window(imnotgui::window_t *window) {
+void cs7gvx_utils::imnotgui::register_window(
+    cs7gvx_utils::imnotgui::window_t *window) {
   windows.insert(window);
 }

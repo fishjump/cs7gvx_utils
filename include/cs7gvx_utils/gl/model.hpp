@@ -15,7 +15,8 @@ class model_t {
 public:
   model_t(const std::string &path, cs7gvx_utils::gl::shader_t *shader,
           const cs7gvx_utils::gl::camera_t *camera,
-          float aspect_ratio = 16 / 9.0, bool gamma_correction = false);
+          float aspect_ratio = (float)800 / (float)600,
+          bool gamma_correction = false);
 
   const glm::mat4 &transform_mat() const;
   cs7gvx_utils::gl::shader_t &shader();
@@ -24,9 +25,7 @@ public:
   virtual void init();
   virtual void update();
   void loop();
-  void bind_camera(const cs7gvx_utils::gl::camera_t *camera) {
-    _camera = camera;
-  }
+  void bind_camera(const cs7gvx_utils::gl::camera_t *camera);
 
   glm::mat4 translate(const glm::vec3 &v);
   glm::mat4 scale(const glm::vec3 &v);

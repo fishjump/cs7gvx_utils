@@ -74,7 +74,13 @@ void cs7gvx_utils::gl::model_t::init() {
     return;
   }
 }
+
 void cs7gvx_utils::gl::model_t::update() {}
+
+void cs7gvx_utils::gl::model_t::bind_camera(
+    const cs7gvx_utils::gl::camera_t *camera) {
+  _camera = camera;
+}
 
 void cs7gvx_utils::gl::model_t::loop() {
   update();

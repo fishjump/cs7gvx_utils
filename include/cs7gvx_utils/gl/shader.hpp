@@ -48,7 +48,8 @@ private:
 } // namespace cs7gvx_utils::gl
 
 template <class T>
-void cs7gvx_utils::gl::shader_t::set_uniform(const std::string &name, const T &t) const {
+void cs7gvx_utils::gl::shader_t::set_uniform(const std::string &name,
+                                             const T &t) const {
   if constexpr (std::is_integral_v<T> || std::is_same_v<T, bool>) {
     glUniform1i(glGetUniformLocation(_program_id, name.c_str()), (int)t);
   } else if constexpr (std::is_same_v<T, float_t>) {

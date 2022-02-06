@@ -13,7 +13,7 @@ std::unordered_set<cs7gvx_utils::imnotgui::window_t *> windows;
 
 }
 
-cs7gvx_utils::imnotgui::window_t::window_t() { register_window(this); }
+cs7gvx_utils::imnotgui::window_t::window_t() {}
 
 void cs7gvx_utils::imnotgui::init(GLFWwindow *window) {
   IMGUI_CHECKVERSION();

@@ -12,9 +12,9 @@
 
 namespace {
 
-common::result_t<GLuint> texture_from_file(const std::string &file,
-                                           const std::string &dir, bool gamma) {
-  const std::string filename = common::make_str(dir, '/', file);
+cs7gvx_utils::common::result_t<GLuint>
+texture_from_file(const std::string &file, const std::string &dir, bool gamma) {
+  const std::string filename = cs7gvx_utils::common::make_str(dir, '/', file);
 
   GLuint texture_id;
   glGenTextures(1, &texture_id);
@@ -24,8 +24,8 @@ common::result_t<GLuint> texture_from_file(const std::string &file,
       stbi_load(filename.c_str(), &width, &height, &nr_components, 0);
   defer(stbi_image_free(data));
   if (!data) {
-    std::string err =
-        common::make_str("Texture failed to load at path: ", filename);
+    std::string err = cs7gvx_utils::common::make_str(
+        "Texture failed to load at path: ", filename);
     LOG_ERR(err);
     return {0, err};
   }
@@ -59,48 +59,53 @@ common::result_t<GLuint> texture_from_file(const std::string &file,
 
 } // namespace
 
-gl::model_t::model_t(const std::string &path, gl::shader_t *shader,
-                     const gl::camera_t *camera, float aspect_ratio,
-                     bool gamma_correction)
+cs7gvx_utils::gl::model_t::model_t(const std::string &path,
+                                   cs7gvx_utils::gl::shader_t *shader,
+                                   const cs7gvx_utils::gl::camera_t *camera,
+                                   float aspect_ratio, bool gamma_correction)
     : _transform_mat(glm::mat4(1.0f)), _aspect_ratio(aspect_ratio),
       _gamma_correction(gamma_correction), _camera(camera), _shader(shader),
       _file(path) {}
 
-void gl::model_t::init() {
+void cs7gvx_utils::gl::model_t::init() {
   auto res = load(_file);
   if (res.err != std::nullopt) {
     LOG_ERR(res.err.value());
     return;
   }
 }
-void gl::model_t::update() {}
+void cs7gvx_utils::gl::model_t::update() {}
 
-void gl::model_t::loop() {
+void cs7gvx_utils::gl::model_t::loop() {
   update();
   update_profile();
   draw();
 }
 
-const glm::mat4 &gl::model_t::transform_mat() const { return _transform_mat; }
+const glm::mat4 &cs7gvx_utils::gl::model_t::transform_mat() const {
+  return _transform_mat;
+}
 
-std::shared_ptr<gl::shader_profile_t> gl::model_t::profile() {
+std::shared_ptr<cs7gvx_utils::gl::shader_profile_t>
+cs7gvx_utils::gl::model_t::profile() {
   return _shader->profile();
 }
 
-glm::mat4 gl::model_t::translate(const glm::vec3 &v) {
+glm::mat4 cs7gvx_utils::gl::model_t::translate(const glm::vec3 &v) {
   return glm::translate(_transform_mat, v);
 }
 
-glm::mat4 gl::model_t::scale(const glm::vec3 &v) {
+glm::mat4 cs7gvx_utils::gl::model_t::scale(const glm::vec3 &v) {
   return glm::scale(_transform_mat, v);
 }
 
-glm::mat4 gl::model_t::rotate(float degree, const glm::vec3 &axis) {
+glm::mat4 cs7gvx_utils::gl::model_t::rotate(float degree,
+                                            const glm::vec3 &axis) {
   return glm::rotate(_transform_mat, glm::radians(degree), axis);
 }
 
-glm::mat4 gl::model_t::rotate(float roll, float pitch, float yaw,
-                              bool _quaternion) {
+glm::mat4 cs7gvx_utils::gl::model_t::rotate(float roll, float pitch, float yaw,
+                                            bool _quaternion) {
   using namespace glm;
   float &a = yaw, &b = pitch, &y = roll;
   if (_quaternion) {
@@ -142,7 +147,7 @@ glm::mat4 gl::model_t::rotate(float roll, float pitch, float yaw,
   return glm::mat4(trans);
 };
 
-void gl::model_t::draw() {
+void cs7gvx_utils::gl::model_t::draw() {
   _shader->use();
   _shader->set_profile();
 
@@ -151,7 +156,7 @@ void gl::model_t::draw() {
   }
 }
 
-void gl::model_t::update_profile() {
+void cs7gvx_utils::gl::model_t::update_profile() {
   _shader->profile()->view_pos = _camera->position();
 
   _shader->profile()->projection = glm::perspective(
@@ -160,9 +165,12 @@ void gl::model_t::update_profile() {
   _shader->profile()->model = _transform_mat;
 }
 
-gl::shader_t &gl::model_t::shader() { return *_shader; }
+cs7gvx_utils::gl::shader_t &cs7gvx_utils::gl::model_t::shader() {
+  return *_shader;
+}
 
-common::result_t<> gl::model_t::load(const std::string &path) {
+cs7gvx_utils::common::result_t<>
+cs7gvx_utils::gl::model_t::load(const std::string &path) {
   Assimp::Importer importer;
   const aiScene *scene = importer.ReadFile(
       path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
@@ -172,17 +180,18 @@ common::result_t<> gl::model_t::load(const std::string &path) {
       !scene->mRootNode) {
     const std::string err = importer.GetErrorString();
     LOG_ERR(err);
-    return {common::none_v, err};
+    return {cs7gvx_utils::common::none_v, err};
   }
 
   _dir = path.substr(0, path.find_last_of('/'));
 
   process_node(scene->mRootNode, scene);
 
-  return {common::none_v, std::nullopt};
+  return {cs7gvx_utils::common::none_v, std::nullopt};
 }
 
-void gl::model_t::process_node(aiNode *node, const aiScene *scene) {
+void cs7gvx_utils::gl::model_t::process_node(aiNode *node,
+                                             const aiScene *scene) {
   for (size_t i = 0; i < node->mNumMeshes; i++) {
     aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
     _meshes.push_back(process_mesh(mesh, scene));
@@ -193,13 +202,14 @@ void gl::model_t::process_node(aiNode *node, const aiScene *scene) {
   }
 }
 
-gl::mesh_t gl::model_t::process_mesh(aiMesh *mesh, const aiScene *scene) {
+cs7gvx_utils::gl::mesh_t
+cs7gvx_utils::gl::model_t::process_mesh(aiMesh *mesh, const aiScene *scene) {
   std::vector<gl::vertex_t> vertices;
   std::vector<uint32_t> indices;
   std::vector<gl::texture_t> textures;
 
   for (size_t i = 0; i < mesh->mNumVertices; i++) {
-    gl::vertex_t vertex;
+    cs7gvx_utils::gl::vertex_t vertex;
 
     vertex.position = {mesh->mVertices[i].x, mesh->mVertices[i].y,
                        mesh->mVertices[i].z};
@@ -251,9 +261,10 @@ gl::mesh_t gl::model_t::process_mesh(aiMesh *mesh, const aiScene *scene) {
   return mesh_t(vertices, indices, textures);
 }
 
-std::vector<gl::texture_t>
-gl::model_t::load_material_textures(aiMaterial *mat, aiTextureType type,
-                                    const std::string &typeName) {
+std::vector<cs7gvx_utils::gl::texture_t>
+cs7gvx_utils::gl::model_t::load_material_textures(aiMaterial *mat,
+                                                  aiTextureType type,
+                                                  const std::string &typeName) {
   std::vector<gl::texture_t> textures;
   for (size_t i = 0; i < mat->GetTextureCount(type); i++) {
     aiString str;
@@ -271,7 +282,7 @@ gl::model_t::load_material_textures(aiMaterial *mat, aiTextureType type,
       continue;
     }
 
-    gl::texture_t texture = {
+    cs7gvx_utils::gl::texture_t texture = {
         .id = res.result,
         .type = typeName,
         .path = str.C_Str(),

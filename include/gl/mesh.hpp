@@ -7,7 +7,7 @@
 
 #include <common.hpp>
 
-namespace gl {
+namespace cs7gvx_utils::gl {
 
 constexpr size_t MAX_BONE_INFLUENCE = 4;
 
@@ -46,4 +46,4 @@ private:
   std::vector<texture_t> _textures;
 };
 
-} // namespace gl
+} // namespace cs7gvx_utils::gl

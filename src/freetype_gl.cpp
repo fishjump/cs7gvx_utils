@@ -1,4 +1,4 @@
-#include <gl/freetype_gl.hpp>
+#include <freetype_gl/freetype_gl.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -11,8 +11,9 @@ GLuint VAO = 0, VBO = 0;
 
 }
 
-void gl::freetype_gl::init(shader_t &shader, const size_t win_width,
-                           const size_t win_height) {
+void cs7gvx_utils::freetype_gl::init(gl::shader_t &shader,
+                                     const size_t win_width,
+                                     const size_t win_height) {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glBindVertexArray(VAO);
@@ -30,8 +31,8 @@ void gl::freetype_gl::init(shader_t &shader, const size_t win_width,
                      GL_FALSE, glm::value_ptr(projection));
 }
 
-std::shared_ptr<gl::freetype_gl::font_t>
-gl::freetype_gl::load_font(const std::string &font_path) {
+std::shared_ptr<cs7gvx_utils::freetype_gl::font_t>
+cs7gvx_utils::freetype_gl::load_font(const std::string &font_path) {
   FT_Library ft;
   if (FT_Init_FreeType(&ft)) {
     LOG_ERR("Could not init FreeType Library");
@@ -81,9 +82,9 @@ gl::freetype_gl::load_font(const std::string &font_path) {
   return font_ptr;
 }
 
-void gl::freetype_gl::print(
-    const std::shared_ptr<gl::freetype_gl::font_t> font_ptr, shader_t &shader,
-    const std::string &str, float x, float y, float scale,
+void cs7gvx_utils::freetype_gl::print(
+    const std::shared_ptr<cs7gvx_utils::freetype_gl::font_t> font_ptr,
+    gl::shader_t &shader, const std::string &str, float x, float y, float scale,
     const glm::vec3 &color) {
 
   shader.use();

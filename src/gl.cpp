@@ -1,6 +1,6 @@
 #include <gl/gl.hpp>
 
-void gl::init() {
+void cs7gvx_utils::gl::init() {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

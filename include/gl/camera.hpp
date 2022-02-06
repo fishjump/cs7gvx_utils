@@ -2,7 +2,7 @@
 
 #include "gl.hpp"
 
-namespace gl {
+namespace cs7gvx_utils::gl {
 
 enum class camera_movement_t { FORWARD, BACKWARD, LEFT, RIGHT };
 
@@ -55,4 +55,4 @@ private:
   void update_camera_vectors();
 };
 
-} // namespace gl
+} // namespace cs7gvx_utils::gl

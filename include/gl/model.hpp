@@ -9,22 +9,24 @@
 
 #include <assimp/scene.h>
 
-namespace gl {
+namespace cs7gvx_utils::gl {
 
 class model_t {
 public:
-  model_t(const std::string &path, gl::shader_t *shader,
-          const gl::camera_t *camera, float aspect_ratio = 16 / 9.0,
-          bool gamma_correction = false);
+  model_t(const std::string &path, cs7gvx_utils::gl::shader_t *shader,
+          const cs7gvx_utils::gl::camera_t *camera,
+          float aspect_ratio = 16 / 9.0, bool gamma_correction = false);
 
   const glm::mat4 &transform_mat() const;
-  gl::shader_t &shader();
+  cs7gvx_utils::gl::shader_t &shader();
   std::shared_ptr<gl::shader_profile_t> profile();
 
   virtual void init();
   virtual void update();
   void loop();
-  void bind_camera(const gl::camera_t *camera) { _camera = camera; }
+  void bind_camera(const cs7gvx_utils::gl::camera_t *camera) {
+    _camera = camera;
+  }
 
   glm::mat4 translate(const glm::vec3 &v);
   glm::mat4 scale(const glm::vec3 &v);
@@ -38,8 +40,8 @@ private:
   float _aspect_ratio;
   bool _gamma_correction;
 
-  const gl::camera_t *_camera;
-  gl::shader_t *_shader;
+  const cs7gvx_utils::gl::camera_t *_camera;
+  cs7gvx_utils::gl::shader_t *_shader;
 
   std::string _file;
   std::string _dir;
@@ -49,7 +51,7 @@ private:
   void draw();
   void update_profile();
 
-  common::result_t<> load(const std::string &path);
+  cs7gvx_utils::common::result_t<> load(const std::string &path);
   void process_node(aiNode *node, const aiScene *scene);
   mesh_t process_mesh(aiMesh *mesh, const aiScene *scene);
   std::vector<gl::texture_t>
@@ -57,4 +59,4 @@ private:
                          const std::string &typeName);
 };
 
-} // namespace gl
+} // namespace cs7gvx_utils::gl

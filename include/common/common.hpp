@@ -12,9 +12,10 @@
 #define _MERGE(x, y) __MERGE(x, y)
 #define UNIQUE(x) _MERGE(x, __COUNTER__)
 
-#define defer(expr) common::_defer_t UNIQUE(_defer) = [&]() { expr; }
+#define defer(expr)                                                            \
+  cs7gvx_utils::common::_defer_t UNIQUE(_defer) = [&]() { expr; }
 
-namespace common {
+namespace cs7gvx_utils::common {
 
 template <class> inline constexpr bool dependent_false_v = false;
 
@@ -67,4 +68,4 @@ template <class F> struct _defer_t {
   ~_defer_t() { func(); }
 };
 
-} // namespace common
+} // namespace cs7gvx_utils::common

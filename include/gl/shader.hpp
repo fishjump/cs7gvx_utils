@@ -9,7 +9,7 @@
 
 #include <common.hpp>
 
-namespace gl {
+namespace cs7gvx_utils::gl {
 
 struct shader_id_t final {
   GLuint vert_id;
@@ -24,7 +24,7 @@ public:
   void use();
   void set_profile();
 
-  common::result_t<GLuint> build();
+  cs7gvx_utils::common::result_t<GLuint> build();
 
   std::shared_ptr<shader_profile_t> profile();
   GLuint program_id() const;
@@ -34,10 +34,10 @@ public:
   void set_uniform(const std::string &name, const T &t) const;
 
 private:
-  common::result_t<GLuint> create();
-  common::result_t<> compile();
-  common::result_t<> link();
-  common::result_t<> validate() const;
+  cs7gvx_utils::common::result_t<GLuint> create();
+  cs7gvx_utils::common::result_t<> compile();
+  cs7gvx_utils::common::result_t<> link();
+  cs7gvx_utils::common::result_t<> validate() const;
 
   const std::string _vert_glsl;
   const std::string _frag_glsl;
@@ -45,30 +45,31 @@ private:
   GLuint _program_id = 0;
 };
 
-} // namespace gl
+} // namespace cs7gvx_utils::gl
 
 template <class T>
-void gl::shader_t::set_uniform(const std::string &name, const T &t) const {
+void cs7gvx_utils::gl::shader_t::set_uniform(const std::string &name, const T &t) const {
   if constexpr (std::is_integral_v<T> || std::is_same_v<T, bool>) {
     glUniform1i(glGetUniformLocation(_program_id, name.c_str()), (int)t);
   } else if constexpr (std::is_same_v<T, float_t>) {
     glUniform1f(glGetUniformLocation(_program_id, name.c_str()), (float_t)t);
-  } else if constexpr (common::is_glm_vec_v<T, 2>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_vec_v<T, 2>) {
     glUniform2fv(glGetUniformLocation(_program_id, name.c_str()), 1, &t[0]);
-  } else if constexpr (common::is_glm_vec_v<T, 3>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_vec_v<T, 3>) {
     glUniform3fv(glGetUniformLocation(_program_id, name.c_str()), 1, &t[0]);
-  } else if constexpr (common::is_glm_vec_v<T, 4>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_vec_v<T, 4>) {
     glUniform4fv(glGetUniformLocation(_program_id, name.c_str()), 1, &t[0]);
-  } else if constexpr (common::is_glm_mat_v<T, 2>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_mat_v<T, 2>) {
     glUniformMatrix2fv(glGetUniformLocation(_program_id, name.c_str()), 1,
                        GL_FALSE, &t[0][0]);
-  } else if constexpr (common::is_glm_mat_v<T, 3>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_mat_v<T, 3>) {
     glUniformMatrix3fv(glGetUniformLocation(_program_id, name.c_str()), 1,
                        GL_FALSE, &t[0][0]);
-  } else if constexpr (common::is_glm_mat_v<T, 4>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_mat_v<T, 4>) {
     glUniformMatrix4fv(glGetUniformLocation(_program_id, name.c_str()), 1,
                        GL_FALSE, &t[0][0]);
   } else {
-    static_assert(common::dependent_false_v<T>, "unsupported type");
+    static_assert(cs7gvx_utils::common::dependent_false_v<T>,
+                  "unsupported type");
   }
 }

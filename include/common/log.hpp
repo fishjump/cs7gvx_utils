@@ -16,12 +16,16 @@
 #endif
 
 #define LOG_STR(...)                                                           \
-  common::make_str("[", __FUNCTION__, "] at ", __FILE__, ":", __LINE__, " ",   \
-                   __VA_ARGS__)
-#define LOG_ERR_STR(...) common::make_str("[ERR]", LOG_STR(__VA_ARGS__))
-#define LOG_WRAN_STR(...) common::make_str("[WRAN]", LOG_STR(__VA_ARGS__))
-#define LOG_INFO_STR(...) common::make_str("[INFO]", LOG_STR(__VA_ARGS__))
-#define LOG_DEBUG_STR(...) common::make_str("[DEBUG]", LOG_STR(__VA_ARGS__))
+  cs7gvx_utils::common::make_str("[", __FUNCTION__, "] at ", __FILE__, ":",    \
+                                 __LINE__, " ", __VA_ARGS__)
+#define LOG_ERR_STR(...)                                                       \
+  cs7gvx_utils::common::make_str("[ERR]", LOG_STR(__VA_ARGS__))
+#define LOG_WRAN_STR(...)                                                      \
+  cs7gvx_utils::common::make_str("[WRAN]", LOG_STR(__VA_ARGS__))
+#define LOG_INFO_STR(...)                                                      \
+  cs7gvx_utils::common::make_str("[INFO]", LOG_STR(__VA_ARGS__))
+#define LOG_DEBUG_STR(...)                                                     \
+  cs7gvx_utils::common::make_str("[DEBUG]", LOG_STR(__VA_ARGS__))
 
 #define LOG(log_level, msg)                                                    \
   do {                                                                         \

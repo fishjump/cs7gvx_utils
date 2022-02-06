@@ -11,22 +11,22 @@
 // internal func declare
 namespace {
 
-common::result_t<std::shared_ptr<std::string>>
+cs7gvx_utils::common::result_t<std::shared_ptr<std::string>>
 load_shader(const std::string &file);
 
-common::result_t<GLuint> compile_shader(const std::string &glsl_file,
-                                        const GLenum shader_type);
+cs7gvx_utils::common::result_t<GLuint>
+compile_shader(const std::string &glsl_file, const GLenum shader_type);
 
 } // namespace
 
-GLuint gl::shader_t::program_id() const { return _program_id; }
+GLuint cs7gvx_utils::gl::shader_t::program_id() const { return _program_id; }
 
-gl::shader_t::shader_t(const std::string &vert_glsl,
-                       const std::string &frag_glsl,
-                       std::shared_ptr<shader_profile_t> profile)
+cs7gvx_utils::gl::shader_t::shader_t(const std::string &vert_glsl,
+                                     const std::string &frag_glsl,
+                                     std::shared_ptr<shader_profile_t> profile)
     : _vert_glsl(vert_glsl), _frag_glsl(frag_glsl), _profile(profile) {}
 
-common::result_t<GLuint> gl::shader_t::build() {
+cs7gvx_utils::common::result_t<GLuint> cs7gvx_utils::gl::shader_t::build() {
   if (auto res = create(); res.err != std::nullopt) {
     LOG_ERR(res.err.value());
     return {0, res.err};
@@ -45,9 +45,9 @@ common::result_t<GLuint> gl::shader_t::build() {
   return {_program_id, std::nullopt};
 }
 
-void gl::shader_t::use() { glUseProgram(_program_id); }
+void cs7gvx_utils::gl::shader_t::use() { glUseProgram(_program_id); }
 
-common::result_t<GLuint> gl::shader_t::create() {
+cs7gvx_utils::common::result_t<GLuint> cs7gvx_utils::gl::shader_t::create() {
   _program_id = glCreateProgram();
   if (_program_id == 0) {
     constexpr auto err = "error creating shader program";
@@ -58,18 +58,18 @@ common::result_t<GLuint> gl::shader_t::create() {
   return {_program_id, std::nullopt};
 }
 
-common::result_t<> gl::shader_t::compile() {
+cs7gvx_utils::common::result_t<> cs7gvx_utils::gl::shader_t::compile() {
   auto res = compile_shader(_vert_glsl, GL_VERTEX_SHADER);
   if (res.err != std::nullopt) {
     LOG_ERR(res.err.value());
-    return {common::none_v, res.err};
+    return {cs7gvx_utils::common::none_v, res.err};
   }
   GLuint vert_id = res.result;
 
   res = compile_shader(_frag_glsl, GL_FRAGMENT_SHADER);
   if (res.err != std::nullopt) {
     LOG_ERR(res.err.value());
-    return {common::none_v, res.err};
+    return {cs7gvx_utils::common::none_v, res.err};
   }
   GLuint frag_id = res.result;
 
@@ -79,10 +79,10 @@ common::result_t<> gl::shader_t::compile() {
   glDeleteShader(vert_id);
   glDeleteShader(frag_id);
 
-  return {common::none_v, std::nullopt};
+  return {cs7gvx_utils::common::none_v, std::nullopt};
 }
 
-common::result_t<> gl::shader_t::link() {
+cs7gvx_utils::common::result_t<> cs7gvx_utils::gl::shader_t::link() {
   glLinkProgram(_program_id);
 
   GLint success = 0;
@@ -90,15 +90,16 @@ common::result_t<> gl::shader_t::link() {
   if (!success) {
     GLchar err_log[1024] = {'\0'};
     glGetProgramInfoLog(_program_id, sizeof(err_log), NULL, err_log);
-    auto err = common::make_str("Error linking shader program: ", err_log);
+    auto err = cs7gvx_utils::common::make_str("Error linking shader program: ",
+                                              err_log);
     LOG_ERR(err);
-    return {common::none_v, err};
+    return {cs7gvx_utils::common::none_v, err};
   }
 
-  return {common::none_v, std::nullopt};
+  return {cs7gvx_utils::common::none_v, std::nullopt};
 }
 
-common::result_t<> gl::shader_t::validate() const {
+cs7gvx_utils::common::result_t<> cs7gvx_utils::gl::shader_t::validate() const {
   glValidateProgram(_program_id);
 
   GLint success = 0;
@@ -106,15 +107,16 @@ common::result_t<> gl::shader_t::validate() const {
   glGetProgramiv(_program_id, GL_VALIDATE_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(_program_id, sizeof(err_log), NULL, err_log);
-    auto err = common::make_str("Invalid shader program: ", err_log);
+    auto err =
+        cs7gvx_utils::common::make_str("Invalid shader program: ", err_log);
     LOG_ERR(err);
-    return {common::none_v, err};
+    return {cs7gvx_utils::common::none_v, err};
   }
 
-  return {common::none_v, std::nullopt};
+  return {cs7gvx_utils::common::none_v, std::nullopt};
 }
 
-void gl::shader_t::set_profile() {
+void cs7gvx_utils::gl::shader_t::set_profile() {
   if (_profile == nullptr) {
     return;
   }
@@ -127,20 +129,22 @@ void gl::shader_t::set_profile() {
   });
 }
 
-std::shared_ptr<gl::shader_profile_t> gl::shader_t::profile() {
+std::shared_ptr<cs7gvx_utils::gl::shader_profile_t>
+cs7gvx_utils::gl::shader_t::profile() {
   return _profile;
 }
 
 // internal func impl
 namespace {
 
-common::result_t<std::shared_ptr<std::string>>
+cs7gvx_utils::common::result_t<std::shared_ptr<std::string>>
 load_shader(const std::string &file) {
   std::ifstream fs;
 
   fs.open(file);
   if (!fs.is_open()) {
-    return {nullptr, common::make_str("fail to open file: ", file)};
+    return {nullptr,
+            cs7gvx_utils::common::make_str("fail to open file: ", file)};
   }
   defer(fs.close());
 
@@ -154,8 +158,8 @@ load_shader(const std::string &file) {
   return {std::make_shared<std::string>(ss.str()), std::nullopt};
 }
 
-common::result_t<GLuint> compile_shader(const std::string &glsl_file,
-                                        const GLenum shader_type) {
+cs7gvx_utils::common::result_t<GLuint>
+compile_shader(const std::string &glsl_file, const GLenum shader_type) {
   auto res = load_shader(glsl_file);
   if (res.err != std::nullopt) {
     LOG_ERR(res.err.value());
@@ -164,7 +168,7 @@ common::result_t<GLuint> compile_shader(const std::string &glsl_file,
 
   GLuint shader_id = glCreateShader(shader_type);
   if (shader_id == 0) {
-    const auto err = common::make_str(
+    const auto err = cs7gvx_utils::common::make_str(
         "filename: ", glsl_file, ", error creating shader type ", shader_type);
     LOG_ERR(err);
     return {0, err};
@@ -179,9 +183,9 @@ common::result_t<GLuint> compile_shader(const std::string &glsl_file,
   if (!success) {
     GLchar log[1024];
     glGetShaderInfoLog(shader_id, 1024, NULL, log);
-    const auto err = common::make_str("filename: ", glsl_file,
-                                      ", error compiling shader type ",
-                                      shader_type, ":", log);
+    const auto err = cs7gvx_utils::common::make_str(
+        "filename: ", glsl_file, ", error compiling shader type ", shader_type,
+        ":", log);
     return {0, err};
   }
 

@@ -6,7 +6,7 @@
 
 #include <common.hpp>
 
-namespace gl {
+namespace cs7gvx_utils::gl {
 
 struct meta_profile_t {
   std::unordered_map<std::string, GLboolean> booleans;
@@ -69,29 +69,31 @@ public:
 template <class T>
 void insert(meta_profile_t &meta, const std::string &key, const T &value);
 
-} // namespace gl
+} // namespace cs7gvx_utils::gl
 
 template <class T>
-void gl::insert(meta_profile_t &meta, const std::string &key, const T &value) {
+void cs7gvx_utils::gl::insert(meta_profile_t &meta, const std::string &key,
+                              const T &value) {
   if constexpr (std::is_same_v<T, GLboolean>) {
     meta.booleans[key] = value;
   } else if constexpr (std::is_integral_v<T>) {
     meta.integrals[key] = value;
   } else if constexpr (std::is_same_v<T, GLfloat>) {
     meta.floats[key] = value;
-  } else if constexpr (common::is_glm_vec_v<T, 2>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_vec_v<T, 2>) {
     meta.vec2s[key] = value;
-  } else if constexpr (common::is_glm_vec_v<T, 3>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_vec_v<T, 3>) {
     meta.vec3s[key] = value;
-  } else if constexpr (common::is_glm_vec_v<T, 4>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_vec_v<T, 4>) {
     meta.vec4s[key] = value;
-  } else if constexpr (common::is_glm_mat_v<T, 2>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_mat_v<T, 2>) {
     meta.mat2s[key] = value;
-  } else if constexpr (common::is_glm_mat_v<T, 3>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_mat_v<T, 3>) {
     meta.mat3s[key] = value;
-  } else if constexpr (common::is_glm_mat_v<T, 4>) {
+  } else if constexpr (cs7gvx_utils::common::is_glm_mat_v<T, 4>) {
     meta.mat4s[key] = value;
   } else {
-    static_assert(common::dependent_false_v<T>, "unsupported type");
+    static_assert(cs7gvx_utils::common::dependent_false_v<T>,
+                  "unsupported type");
   }
 }

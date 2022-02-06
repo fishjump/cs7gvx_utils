@@ -1,4 +1,4 @@
-#include <gl/gl.hpp>
+#include <cs7gvx_utils/gl/gl.hpp>
 
 void cs7gvx_utils::gl::init() {
   glfwInit();

@@ -1,4 +1,4 @@
-#include <gl/shader.hpp>
+#include <cs7gvx_utils/gl/shader.hpp>
 
 #include <fstream>
 #include <memory>

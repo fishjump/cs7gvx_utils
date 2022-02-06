@@ -1,11 +1,11 @@
-#include <imnotgui/imnotgui.hpp>
+#include <cs7gvx_utils/imnotgui/imnotgui.hpp>
 
 #include <memory>
 #include <unordered_set>
 
-#include <imgui/backends/imgui_impl_glfw.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
-#include <imgui/imgui.h>
+#include "imgui-1.86/backends/imgui_impl_glfw.h"
+#include "imgui-1.86/backends/imgui_impl_opengl3.h"
+#include "imgui-1.86/imgui.h"
 
 namespace {
 

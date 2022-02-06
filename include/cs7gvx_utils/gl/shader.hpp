@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-#include <common.hpp>
+#include <cs7gvx_utils/common.hpp>
 
 namespace cs7gvx_utils::gl {
 

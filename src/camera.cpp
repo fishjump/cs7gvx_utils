@@ -1,4 +1,4 @@
-#include <gl/camera.hpp>
+#include <cs7gvx_utils/gl/camera.hpp>
 
 cs7gvx_utils::gl::camera_t::camera_t(glm::vec3 position, glm::vec3 world_up,
                                      float yaw, float pitch)

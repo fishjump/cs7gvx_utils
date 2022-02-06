@@ -1,14 +1,14 @@
 #define STB_IMAGE_IMPLEMENTATION
 
-#include <gl/model.hpp>
+#include <cs7gvx_utils/gl/model.hpp>
 
+#include "stb_image.h"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <boost/filesystem.hpp>
-#include <gl.hpp>
-#include <stb_image.h>
+#include <cs7gvx_utils/gl.hpp>
 
-#include <common.hpp>
+#include <cs7gvx_utils/common.hpp>
 
 namespace {
 

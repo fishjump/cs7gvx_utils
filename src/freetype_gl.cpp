@@ -1,9 +1,9 @@
-#include <freetype_gl/freetype_gl.hpp>
+#include <cs7gvx_utils/freetype_gl/freetype_gl.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include <common.hpp>
+#include <cs7gvx_utils/common.hpp>
 
 namespace {
 

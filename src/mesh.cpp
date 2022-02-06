@@ -1,4 +1,4 @@
-#include <gl/mesh.hpp>
+#include <cs7gvx_utils/gl/mesh.hpp>
 
 #include <boost/pfr.hpp>
 

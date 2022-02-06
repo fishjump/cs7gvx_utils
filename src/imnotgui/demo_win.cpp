@@ -1,8 +1,8 @@
-#include <imnotgui/imnotgui.hpp>
+#include <cs7gvx_utils/imnotgui/imnotgui.hpp>
 
-#include <imgui/backends/imgui_impl_glfw.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
-#include <imgui/imgui.h>
+#include "imgui-1.86/backends/imgui_impl_glfw.h"
+#include "imgui-1.86/backends/imgui_impl_opengl3.h"
+#include "imgui-1.86/imgui.h"
 
 void cs7gvx_utils::imnotgui::demo_window_t::refresh() {
   {

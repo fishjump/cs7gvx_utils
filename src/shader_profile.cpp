@@ -1,4 +1,4 @@
-#include <gl/shader_profile.hpp>
+#include <cs7gvx_utils/gl/shader_profile.hpp>
 
 cs7gvx_utils::gl::shader_profile_t::shader_profile_t() {}
 cs7gvx_utils::gl::shader_profile_t::shader_profile_t(const material_t &material,

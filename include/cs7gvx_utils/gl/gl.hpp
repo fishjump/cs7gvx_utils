@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glad/glad.h>
+#include <cs7gvx_utils/glad/glad.h>
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -32,4 +32,4 @@ struct light_t {
   glm::vec3 specular_color;
 };
 
-} // namespace gl
+} // namespace cs7gvx_utils::gl

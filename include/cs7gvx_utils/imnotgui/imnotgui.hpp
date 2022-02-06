@@ -1,6 +1,6 @@
 #pragma once
 
-#include <gl.hpp>
+#include <cs7gvx_utils/gl.hpp>
 
 namespace cs7gvx_utils::imnotgui {
 

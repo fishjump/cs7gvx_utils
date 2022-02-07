@@ -6,8 +6,9 @@ namespace cs7gvx_utils::gl {
 
 enum class camera_movement_t { FORWARD, BACKWARD, LEFT, RIGHT };
 
-constexpr float YAW = -90.0f;
+constexpr float ROLL = 0.0f;
 constexpr float PITCH = 0.0f;
+constexpr float YAW = -90.0f;
 constexpr float SPEED = 2.5f;
 constexpr float SENSITIVITY = 0.05f;
 constexpr float ZOOM = 45.0f;
@@ -15,8 +16,8 @@ constexpr float ZOOM = 45.0f;
 class camera_t final {
 public:
   camera_t(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
-           glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW,
-           float pitch = PITCH);
+           glm::vec3 world_up = glm::vec3(0.0f, 1.0f, 0.0f),
+           float pitch = PITCH, float yaw = YAW);
 
   glm::mat4 view_matrix() const;
 
@@ -25,11 +26,14 @@ public:
                               GLboolean constrain_pitch = true);
   void process_mouse_scroll(float y_offset);
 
-  glm::vec3 position() const;
-  glm::vec3 front() const;
-  glm::vec3 up() const;
-  glm::vec3 right() const;
-  glm::vec3 world_up() const;
+  void lock(glm::vec3 target);
+  void unlock();
+
+  glm::vec3 &position();
+  glm::vec3 &front();
+  glm::vec3 &up();
+  glm::vec3 &right();
+  glm::vec3 &world_up();
 
   float yaw() const;
   float pitch() const;
@@ -45,8 +49,11 @@ private:
   glm::vec3 _right;
   glm::vec3 _world_up;
 
-  float _yaw;
+  glm::vec3 _target;
+  bool _lock = false;
+
   float _pitch;
+  float _yaw;
 
   float _speed;
   float _mouse_sensitivity;

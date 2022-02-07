@@ -61,7 +61,7 @@ texture_from_file(const std::string &file, const std::string &dir, bool gamma) {
 
 cs7gvx_utils::gl::model_t::model_t(const std::string &path,
                                    cs7gvx_utils::gl::shader_t *shader,
-                                   const cs7gvx_utils::gl::camera_t *camera,
+                                   cs7gvx_utils::gl::camera_t *camera,
                                    float aspect_ratio, bool gamma_correction)
     : _transform_mat(glm::mat4(1.0f)), _aspect_ratio(aspect_ratio),
       _gamma_correction(gamma_correction), _camera(camera), _shader(shader),
@@ -78,7 +78,7 @@ void cs7gvx_utils::gl::model_t::init() {
 void cs7gvx_utils::gl::model_t::update() {}
 
 void cs7gvx_utils::gl::model_t::bind_camera(
-    const cs7gvx_utils::gl::camera_t *camera) {
+    cs7gvx_utils::gl::camera_t *camera) {
   _camera = camera;
 }
 
@@ -88,9 +88,7 @@ void cs7gvx_utils::gl::model_t::loop() {
   draw();
 }
 
-const glm::mat4 &cs7gvx_utils::gl::model_t::transform_mat() const {
-  return _transform_mat;
-}
+glm::mat4 &cs7gvx_utils::gl::model_t::transform_mat() { return _transform_mat; }
 
 std::shared_ptr<cs7gvx_utils::gl::shader_profile_t>
 cs7gvx_utils::gl::model_t::profile() {
@@ -107,14 +105,25 @@ glm::mat4 cs7gvx_utils::gl::model_t::scale(const glm::vec3 &v) {
 
 glm::mat4 cs7gvx_utils::gl::model_t::rotate(float degree,
                                             const glm::vec3 &axis) {
-  return glm::rotate(_transform_mat, glm::radians(degree), axis);
+  return rotate(glm::radians(degree), axis, _transform_mat);
 }
 
 glm::mat4 cs7gvx_utils::gl::model_t::rotate(float roll, float pitch, float yaw,
-                                            bool _quaternion) {
+                                            bool quaternion) {
+  return rotate(roll, pitch, yaw, quaternion, _transform_mat);
+};
+
+glm::mat4 cs7gvx_utils::gl::model_t::rotate(float degree, const glm::vec3 &axis,
+                                            const glm::mat4 &relative) {
+  return glm::rotate(relative, glm::radians(degree), axis);
+}
+
+glm::mat4 cs7gvx_utils::gl::model_t::rotate(float roll, float pitch, float yaw,
+                                            bool quaternion,
+                                            const glm::mat4 &relative) {
   using namespace glm;
   float &a = yaw, &b = pitch, &y = roll;
-  if (_quaternion) {
+  if (quaternion) {
     glm::mat3 r_x_yaw = {{cos(a), 0, sin(a)}, {0, 1, 0}, {-sin(a), 0, cos(a)}};
     glm::mat3 r_y_pitch = {
         {1, 0, 0}, {0, cos(b), -sin(b)}, {0, sin(b), cos(b)}};
@@ -150,8 +159,8 @@ glm::mat4 cs7gvx_utils::gl::model_t::rotate(float roll, float pitch, float yaw,
       },
   };
 
-  return glm::mat4(trans);
-};
+  return relative * glm::mat4(trans);
+}
 
 void cs7gvx_utils::gl::model_t::draw() {
   _shader->use();

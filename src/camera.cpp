@@ -1,44 +1,68 @@
 #include <cs7gvx_utils/gl/camera.hpp>
 
+#include <string>
+
 cs7gvx_utils::gl::camera_t::camera_t(glm::vec3 position, glm::vec3 world_up,
-                                     float yaw, float pitch)
+                                     float pitch, float yaw)
     : _position(position), _front(glm::vec3(0.0f, 0.0f, -1.0f)),
-      _world_up(world_up), _yaw(yaw), _pitch(pitch), _speed(SPEED),
+      _world_up(world_up), _pitch(pitch), _yaw(yaw), _speed(SPEED),
       _mouse_sensitivity(SENSITIVITY), _zoom(ZOOM) {
   update_camera_vectors();
 }
 
 glm::mat4 cs7gvx_utils::gl::camera_t::view_matrix() const {
-  return glm::lookAt(_position, {0.0f, 0.0f, 0.0f}, _up);
+  if (_lock) {
+    return glm::lookAt(_position, _target, _up);
+  }
+
+  return glm::lookAt(_position, _position + _front, _up);
 }
+
+void cs7gvx_utils::gl::camera_t::lock(glm::vec3 target) {
+  _lock = true;
+  _target = target;
+}
+void cs7gvx_utils::gl::camera_t::unlock() { _lock = false; }
 
 void cs7gvx_utils::gl::camera_t::process_keyboard(camera_movement_t direction,
                                                   float_t delta_time) {
-  // float velocity = _speed * delta_time;
+  float velocity = _speed * delta_time;
   switch (direction) {
   case camera_movement_t::FORWARD:
-    // _position += _front * velocity;
-    _position =
-        glm::vec4(_position, 0) *
-        glm::rotate(glm::mat4(1.0f), glm::radians(-1.0f), {1.0f, 0.0f, 0.0f});
+    if (false) {
+      _position =
+          glm::vec4(_position, 0) *
+          glm::rotate(glm::mat4(1.0f), glm::radians(-1.0f), {1.0f, 0.0f, 0.0f});
+    } else {
+      _position += _front * velocity;
+    }
     break;
   case camera_movement_t::BACKWARD:
-    // _position -= _front * velocity;
-    _position =
-        glm::vec4(_position, 0) *
-        glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {1.0f, 0.0f, 0.0f});
+    if (false) {
+      _position =
+          glm::vec4(_position, 0) *
+          glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {1.0f, 0.0f, 0.0f});
+    } else {
+      _position -= _front * velocity;
+    }
     break;
   case camera_movement_t::LEFT:
-    // _position -= _right * velocity;
-    _position =
-        glm::vec4(_position, 0) *
-        glm::rotate(glm::mat4(1.0f), glm::radians(-1.0f), {0.0f, 1.0f, 0.0f});
+    if (_lock) {
+      _position =
+          glm::vec4(_position, 0) *
+          glm::rotate(glm::mat4(1.0f), glm::radians(-1.0f), {0.0f, 1.0f, 0.0f});
+    } else {
+      _position -= _right * velocity;
+    }
     break;
   case camera_movement_t::RIGHT:
-    // _position += _right * velocity;
-    _position =
-        glm::vec4(_position, 0) *
-        glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
+    if (_lock) {
+      _position =
+          glm::vec4(_position, 0) *
+          glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
+    } else {
+      _position += _right * velocity;
+    }
     break;
   }
 }
@@ -80,11 +104,11 @@ void cs7gvx_utils::gl::camera_t::update_camera_vectors() {
   _up = glm::normalize(glm::cross(_right, _front));
 }
 
-glm::vec3 cs7gvx_utils::gl::camera_t::position() const { return _position; }
-glm::vec3 cs7gvx_utils::gl::camera_t::front() const { return _front; }
-glm::vec3 cs7gvx_utils::gl::camera_t::up() const { return _up; }
-glm::vec3 cs7gvx_utils::gl::camera_t::right() const { return _right; }
-glm::vec3 cs7gvx_utils::gl::camera_t::world_up() const { return _world_up; }
+glm::vec3 &cs7gvx_utils::gl::camera_t::position() { return _position; }
+glm::vec3 &cs7gvx_utils::gl::camera_t::front() { return _front; }
+glm::vec3 &cs7gvx_utils::gl::camera_t::up() { return _up; }
+glm::vec3 &cs7gvx_utils::gl::camera_t::right() { return _right; }
+glm::vec3 &cs7gvx_utils::gl::camera_t::world_up() { return _world_up; }
 
 float cs7gvx_utils::gl::camera_t::yaw() const { return _yaw; }
 float cs7gvx_utils::gl::camera_t::pitch() const { return _pitch; }

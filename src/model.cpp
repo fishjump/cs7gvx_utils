@@ -123,13 +123,13 @@ glm::mat4 cs7gvx_utils::gl::model_t::rotate(float roll, float pitch, float yaw,
                                             const glm::mat4 &relative) {
   using namespace glm;
   float &a = yaw, &b = pitch, &y = roll;
-  if (quaternion) {
+  if (!quaternion) {
     glm::mat3 r_x_yaw = {{cos(a), 0, sin(a)}, {0, 1, 0}, {-sin(a), 0, cos(a)}};
     glm::mat3 r_y_pitch = {
         {1, 0, 0}, {0, cos(b), -sin(b)}, {0, sin(b), cos(b)}};
     glm::mat3 r_z_roll = {{cos(y), -sin(y), 0}, {sin(y), cos(y), 0}, {0, 0, 1}};
 
-    return glm::mat4(r_z_roll * r_y_pitch * r_x_yaw);
+    return relative * glm::mat4(r_z_roll * r_y_pitch * r_x_yaw);
   }
 
   float q0 = cos(a / 2) * cos(b / 2) * cos(y / 2) +

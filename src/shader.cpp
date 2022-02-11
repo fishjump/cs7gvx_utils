@@ -24,7 +24,7 @@ GLuint cs7gvx_utils::gl::shader_t::program_id() const { return _program_id; }
 cs7gvx_utils::gl::shader_t::shader_t(const std::string &vert_glsl,
                                      const std::string &frag_glsl,
                                      std::shared_ptr<shader_profile_t> profile)
-    : _vert_glsl(vert_glsl), _frag_glsl(frag_glsl), _profile(profile) {}
+    : profile(profile), _vert_glsl(vert_glsl), _frag_glsl(frag_glsl) {}
 
 cs7gvx_utils::common::result_t<GLuint> cs7gvx_utils::gl::shader_t::build() {
   if (auto res = create(); res.err != std::nullopt) {
@@ -45,7 +45,7 @@ cs7gvx_utils::common::result_t<GLuint> cs7gvx_utils::gl::shader_t::build() {
   return {_program_id, std::nullopt};
 }
 
-void cs7gvx_utils::gl::shader_t::use() { glUseProgram(_program_id); }
+void cs7gvx_utils::gl::shader_t::use() const { glUseProgram(_program_id); }
 
 cs7gvx_utils::common::result_t<GLuint> cs7gvx_utils::gl::shader_t::create() {
   _program_id = glCreateProgram();
@@ -116,22 +116,17 @@ cs7gvx_utils::common::result_t<> cs7gvx_utils::gl::shader_t::validate() const {
   return {cs7gvx_utils::common::none_v, std::nullopt};
 }
 
-void cs7gvx_utils::gl::shader_t::set_profile() {
-  if (_profile == nullptr) {
+void cs7gvx_utils::gl::shader_t::set_profile() const {
+  if (profile == nullptr) {
     return;
   }
 
-  const meta_profile_t &meta = _profile->meta();
+  const meta_profile_t &meta = profile->meta();
   boost::pfr::for_each_field(meta, [this](const auto &field) {
     for (const auto &pair : field) {
       set_uniform(pair.first, pair.second);
     }
   });
-}
-
-std::shared_ptr<cs7gvx_utils::gl::shader_profile_t>
-cs7gvx_utils::gl::shader_t::profile() {
-  return _profile;
 }
 
 // internal func impl

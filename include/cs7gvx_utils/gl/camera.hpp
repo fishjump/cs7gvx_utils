@@ -29,35 +29,22 @@ public:
   void lock(glm::vec3 target);
   void unlock();
 
-  glm::vec3 &position();
-  glm::vec3 &front();
-  glm::vec3 &up();
-  glm::vec3 &right();
-  glm::vec3 &world_up();
+  glm::vec3 position;
+  glm::vec3 front;
+  glm::vec3 up;
+  glm::vec3 right;
+  glm::vec3 world_up;
 
-  float yaw() const;
-  float pitch() const;
+  float pitch;
+  float yaw;
 
-  float speed() const;
-  float mouse_sensitivity() const;
-  float zoom() const;
+  float speed;
+  float mouse_sensitivity;
+  float zoom;
 
 private:
-  glm::vec3 _position;
-  glm::vec3 _front;
-  glm::vec3 _up;
-  glm::vec3 _right;
-  glm::vec3 _world_up;
-
   glm::vec3 _target;
   bool _lock = false;
-
-  float _pitch;
-  float _yaw;
-
-  float _speed;
-  float _mouse_sensitivity;
-  float _zoom;
 
   void update_camera_vectors();
 };

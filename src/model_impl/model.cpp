@@ -60,12 +60,14 @@ texture_from_file(const std::string &file, const std::string &dir, bool gamma) {
 } // namespace
 
 cs7gvx_utils::gl::model_t::model_t(const std::string &path,
-                                   cs7gvx_utils::gl::shader_t *shader,
-                                   cs7gvx_utils::gl::camera_t *camera,
+                                   const cs7gvx_utils::gl::shader_t *shader,
+                                   const cs7gvx_utils::gl::camera_t *camera,
                                    float aspect_ratio, bool gamma_correction)
-    : _transform_mat(glm::mat4(1.0f)), _aspect_ratio(aspect_ratio),
-      _gamma_correction(gamma_correction), _camera(camera), _shader(shader),
-      _file(path) {}
+    : _aspect_ratio(aspect_ratio), _gamma_correction(gamma_correction),
+      _file(path) {
+  this->camera = camera;
+  this->shader = shader;
+}
 
 void cs7gvx_utils::gl::model_t::init() {
   auto res = load(_file);
@@ -77,111 +79,33 @@ void cs7gvx_utils::gl::model_t::init() {
 
 void cs7gvx_utils::gl::model_t::update() {}
 
-void cs7gvx_utils::gl::model_t::bind_camera(
-    cs7gvx_utils::gl::camera_t *camera) {
-  _camera = camera;
-}
-
 void cs7gvx_utils::gl::model_t::loop() {
   update();
   update_profile();
   draw();
 }
 
-glm::mat4 &cs7gvx_utils::gl::model_t::transform_mat() { return _transform_mat; }
-
 std::shared_ptr<cs7gvx_utils::gl::shader_profile_t>
 cs7gvx_utils::gl::model_t::profile() {
-  return _shader->profile();
-}
-
-glm::mat4 cs7gvx_utils::gl::model_t::translate(const glm::vec3 &v) {
-  return glm::translate(_transform_mat, v);
-}
-
-glm::mat4 cs7gvx_utils::gl::model_t::scale(const glm::vec3 &v) {
-  return glm::scale(_transform_mat, v);
-}
-
-glm::mat4 cs7gvx_utils::gl::model_t::rotate(float degree,
-                                            const glm::vec3 &axis) {
-  return rotate(glm::radians(degree), axis, _transform_mat);
-}
-
-glm::mat4 cs7gvx_utils::gl::model_t::rotate(float roll, float pitch, float yaw,
-                                            bool quaternion) {
-  return rotate(roll, pitch, yaw, quaternion, _transform_mat);
-};
-
-glm::mat4 cs7gvx_utils::gl::model_t::rotate(float degree, const glm::vec3 &axis,
-                                            const glm::mat4 &relative) {
-  return glm::rotate(relative, glm::radians(degree), axis);
-}
-
-glm::mat4 cs7gvx_utils::gl::model_t::rotate(float roll, float pitch, float yaw,
-                                            bool quaternion,
-                                            const glm::mat4 &relative) {
-  using namespace glm;
-  float &a = yaw, &b = pitch, &y = roll;
-  if (!quaternion) {
-    glm::mat3 r_x_yaw = {{cos(a), 0, sin(a)}, {0, 1, 0}, {-sin(a), 0, cos(a)}};
-    glm::mat3 r_y_pitch = {
-        {1, 0, 0}, {0, cos(b), -sin(b)}, {0, sin(b), cos(b)}};
-    glm::mat3 r_z_roll = {{cos(y), -sin(y), 0}, {sin(y), cos(y), 0}, {0, 0, 1}};
-
-    return relative * glm::mat4(r_z_roll * r_y_pitch * r_x_yaw);
-  }
-
-  float q0 = cos(a / 2) * cos(b / 2) * cos(y / 2) +
-             sin(a / 2) * sin(b / 2) * sin(y / 2);
-  float q1 = cos(a / 2) * sin(b / 2) * cos(y / 2) -
-             sin(a / 2) * cos(b / 2) * sin(y / 2);
-  float q2 = sin(a / 2) * cos(b / 2) * cos(y / 2) +
-             cos(a / 2) * sin(b / 2) * sin(y / 2);
-  float q3 = cos(a / 2) * cos(b / 2) * sin(y / 2) -
-             sin(a / 2) * sin(b / 2) * cos(y / 2);
-
-  glm::mat3 trans = {
-      {
-          1 - 2 * (glm::pow(q2, 2) + glm::pow(q3, 2)),
-          2 * (q1 * q2 - q0 * q3),
-          2 * (q1 * q3 + q0 * q2),
-      },
-      {
-          2 * (q1 * q2 + q0 * q3),
-          1 - 2 * (glm::pow(q1, 2) + glm::pow(q3, 2)),
-          2 * (q2 * q3 - q0 * q1),
-      },
-      {
-          2 * (q1 * q3 - q0 * q2),
-          2 * (q2 * q3 + q0 * q1),
-          1 - 2 * (glm::pow(q1, 2) + glm::pow(q2, 2)),
-      },
-  };
-
-  return relative * glm::mat4(trans);
+  return shader->profile;
 }
 
 void cs7gvx_utils::gl::model_t::draw() {
-  _shader->use();
-  _shader->set_profile();
+  shader->use();
+  shader->set_profile();
 
   for (const auto &mesh : _meshes) {
-    mesh.draw(*_shader);
+    mesh.draw(*shader);
   }
 }
 
 void cs7gvx_utils::gl::model_t::update_profile() {
-  _shader->profile()->view_pos = _camera->position();
+  shader->profile->view_pos = camera->position;
 
-  _shader->profile()->projection = glm::perspective(
-      glm::radians(_camera->zoom()), _aspect_ratio, 0.1f, 100.0f);
-  _shader->profile()->view = _camera->view_matrix();
-  _shader->profile()->model = _transform_mat;
-}
-
-cs7gvx_utils::gl::shader_t &cs7gvx_utils::gl::model_t::shader() {
-  return *_shader;
+  shader->profile->projection =
+      glm::perspective(glm::radians(camera->zoom), _aspect_ratio, 0.1f, 100.0f);
+  shader->profile->view = camera->view_matrix();
+  shader->profile->model = transform;
 }
 
 cs7gvx_utils::common::result_t<>

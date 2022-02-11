@@ -21,12 +21,13 @@ public:
   shader_t(const std::string &vert_glsl, const std::string &frag_glsl,
            std::shared_ptr<shader_profile_t> profile = nullptr);
 
-  void use();
-  void set_profile();
+  const std::shared_ptr<shader_profile_t> profile;
+
+  void use() const;
+  void set_profile() const;
 
   cs7gvx_utils::common::result_t<GLuint> build();
 
-  std::shared_ptr<shader_profile_t> profile();
   GLuint program_id() const;
   GLuint vao() const;
 
@@ -41,7 +42,6 @@ private:
 
   const std::string _vert_glsl;
   const std::string _frag_glsl;
-  std::shared_ptr<shader_profile_t> _profile;
   GLuint _program_id = 0;
 };
 

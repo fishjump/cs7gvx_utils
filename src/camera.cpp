@@ -36,25 +36,13 @@ void figine::core::camera_t::unlock() { _lock = false; }
 
 void figine::core::camera_t::process_keyboard(camera_movement_t direction,
                                               float_t delta_time) {
-  float velocity = speed * delta_time;
+  float velocity = 0.005;
   switch (direction) {
   case camera_movement_t::FORWARD:
-    if (_lock) {
-      position =
-          glm::vec4(position, 0) *
-          glm::rotate(glm::mat4(1.0f), glm::radians(-1.0f), {1.0f, 0.0f, 0.0f});
-    } else {
-      position += glm::vec3{0, 0, -1} * velocity;
-    }
+    position += front * velocity;
     break;
   case camera_movement_t::BACKWARD:
-    if (_lock) {
-      position =
-          glm::vec4(position, 0) *
-          glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {1.0f, 0.0f, 0.0f});
-    } else {
-      position += glm::vec3{0, 0, 1} * velocity;
-    }
+    position += -front * velocity;
     break;
   case camera_movement_t::LEFT:
     if (_lock) {

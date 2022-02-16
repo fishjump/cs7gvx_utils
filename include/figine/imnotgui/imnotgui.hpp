@@ -27,4 +27,4 @@ void init(GLFWwindow *window);
 void render();
 void register_window(window_t *window);
 
-} // namespace cs7gvx_utils::imnotgui
+} // namespace figine::imnotgui

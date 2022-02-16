@@ -128,8 +128,12 @@ public:
 };
 
 class gooch_shader_t final : public figine::core::shader_t<gooch_profile_t> {
-  gooch_shader_t(std::shared_ptr<gooch_profile_t> profile)
-      : figine::core::shader_t<gooch_profile_t>(gooch_vs, gooch_fs, profile) {}
+  gooch_shader_t(std::shared_ptr<gooch_profile_t> profile = nullptr)
+      : figine::core::shader_t<gooch_profile_t>(gooch_vs, gooch_fs, profile) {
+    if (this->profile == nullptr) {
+      this->profile = std::make_shared<gooch_profile_t>();
+    }
+  }
 };
 
 } // namespace figine::builtin::shader

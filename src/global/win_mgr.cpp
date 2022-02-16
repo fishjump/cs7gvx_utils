@@ -4,14 +4,15 @@
 namespace {
 
 GLFWwindow *_window = nullptr;
-uint32_t _width = 0;
-uint32_t _height = 0;
 
 } // namespace
 
 namespace figine::global::win_mgr {
 
-float aspect_ratio() { return (float)_width / (float)_height; }
+uint32_t width = 0;
+uint32_t height = 0;
+
+float aspect_ratio() { return (float)width / (float)height; }
 
 GLFWwindow *create_window(uint32_t width, uint32_t height,
                           const std::string &title, GLFWmonitor *monitor,
@@ -23,7 +24,12 @@ GLFWwindow *create_window(uint32_t width, uint32_t height,
   }
 
   glfwMakeContextCurrent(_window);
-  // glfwSetFramebufferSizeCallback(_window, cs7gv5::framebuffer_size_callback);
+  glfwSetFramebufferSizeCallback(_window,
+                                 [](GLFWwindow *window, int width, int height) {
+                                   figine::global::win_mgr::width = width;
+                                   figine::global::win_mgr::height = height;
+                                 });
+
   // glfwSetCursorPosCallback(_window, cs7gv5::mouse_callback);
   // glfwSetScrollCallback(_window, cs7gv5::scroll_callback);
   glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -37,8 +43,8 @@ GLFWwindow *create_window(uint32_t width, uint32_t height,
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  _width = width;
-  _height = height;
+  glfwGetFramebufferSize(_window, (int *)&figine::global::win_mgr::width,
+                         (int *)&figine::global::win_mgr::height);
 
   return _window;
 }

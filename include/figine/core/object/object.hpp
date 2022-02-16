@@ -38,7 +38,7 @@ public:
 
   void init() override;
   void update() override;
-  void loop() final;
+  void loop() override;
 
   glm::mat4 translate(const glm::vec3 &v);
   glm::mat4 scale(const glm::vec3 &v);

@@ -1,12 +1,11 @@
 #pragma once
 
 #include "entity.hpp"
-#include "figine/core/shader/shader.hpp"
-#include "figine/core/shader/shader_profile.hpp"
+#include "figine/core/shader.hpp"
 
 namespace figine::builtin::shader {
 
-constexpr const uint8_t gooch_vs[] = R"(
+constexpr uint8_t gooch_vs[] = R"(
 #version 330 core
 
 layout(location = 0) in vec3 pos_in;
@@ -30,7 +29,7 @@ void main() {
 }
 )";
 
-constexpr const uint8_t gooch_fs[] = R"(
+constexpr uint8_t gooch_fs[] = R"(
 #version 330 core
 
 struct material_t {

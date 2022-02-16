@@ -95,7 +95,9 @@ void main() {
 
 class gooch_profile_t final : public figine::core::shader_profile_t {
 public:
-  gooch_profile_t(const material_t &material, const light_t &light);
+  inline gooch_profile_t() = default;
+  inline gooch_profile_t(const material_t &material, const light_t &light)
+      : material(material), light(light) {}
 
   material_t material;
   light_t light;
@@ -128,6 +130,7 @@ public:
 };
 
 class gooch_shader_t final : public figine::core::shader_t<gooch_profile_t> {
+public:
   gooch_shader_t(std::shared_ptr<gooch_profile_t> profile = nullptr)
       : figine::core::shader_t<gooch_profile_t>(gooch_vs, gooch_fs, profile) {
     if (this->profile == nullptr) {

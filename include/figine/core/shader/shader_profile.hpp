@@ -25,6 +25,9 @@ struct meta_profile_t {
 
 class shader_profile_t {
 public:
+  inline shader_profile_t() = default;
+  inline virtual ~shader_profile_t() = default;
+
   inline virtual const meta_profile_t &meta() const {
     _meta.insert("view_pos", view_pos);
 

@@ -39,6 +39,7 @@ void main() {
 
 class skybox_shader_t final
     : public figine::core::shader_t<figine::core::shader_profile_t> {
+public:
   skybox_shader_t(
       std::shared_ptr<figine::core::shader_profile_t> profile = nullptr)
       : figine::core::shader_t<figine::core::shader_profile_t>(

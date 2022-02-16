@@ -82,6 +82,12 @@
     "vector": "cpp",
     "__memory": "cpp",
     "filesystem": "cpp",
-    "*.ipp": "cpp"
+    "*.ipp": "cpp",
+    "any": "cpp",
+    "codecvt": "cpp",
+    "condition_variable": "cpp",
+    "future": "cpp",
+    "concepts": "cpp",
+    "__availability": "cpp"
   }
 }

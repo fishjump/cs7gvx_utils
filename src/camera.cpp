@@ -1,16 +1,26 @@
-#include <cs7gvx_utils/gl/camera.hpp>
+#include "figine/core/camera.hpp"
 
 #include <string>
 
-cs7gvx_utils::gl::camera_t::camera_t(glm::vec3 position, glm::vec3 world_up,
-                                     float pitch, float yaw)
+namespace {
+
+constexpr float PITCH = 0.0f;
+constexpr float YAW = -90.0f;
+constexpr float SPEED = 2.5f;
+constexpr float SENSITIVITY = 0.05f;
+constexpr float ZOOM = 45.0f;
+
+} // namespace
+
+figine::core::camera_t::camera_t(const glm::vec3 &position,
+                                 const glm::vec3 &world_up)
     : position(position), front(glm::vec3(0.0f, 0.0f, -1.0f)),
-      world_up(world_up), pitch(pitch), yaw(yaw), speed(SPEED),
+      world_up(world_up), pitch(PITCH), yaw(YAW), speed(SPEED),
       mouse_sensitivity(SENSITIVITY), zoom(ZOOM) {
-  update_camera_vectors();
+  update();
 }
 
-glm::mat4 cs7gvx_utils::gl::camera_t::view_matrix() const {
+glm::mat4 figine::core::camera_t::view_matrix() const {
   if (_lock) {
     return glm::lookAt(position, _target, up);
   }
@@ -18,14 +28,14 @@ glm::mat4 cs7gvx_utils::gl::camera_t::view_matrix() const {
   return glm::lookAt(position, position + front, up);
 }
 
-void cs7gvx_utils::gl::camera_t::lock(glm::vec3 target) {
+void figine::core::camera_t::lock(glm::vec3 target) {
   _lock = true;
   _target = target;
 }
-void cs7gvx_utils::gl::camera_t::unlock() { _lock = false; }
+void figine::core::camera_t::unlock() { _lock = false; }
 
-void cs7gvx_utils::gl::camera_t::process_keyboard(camera_movement_t direction,
-                                                  float_t delta_time) {
+void figine::core::camera_t::process_keyboard(camera_movement_t direction,
+                                              float_t delta_time) {
   float velocity = speed * delta_time;
   switch (direction) {
   case camera_movement_t::FORWARD:
@@ -67,8 +77,9 @@ void cs7gvx_utils::gl::camera_t::process_keyboard(camera_movement_t direction,
   }
 }
 
-void cs7gvx_utils::gl::camera_t::process_mouse_movement(
-    float x_offset, float y_offset, GLboolean constrainpitch) {
+void figine::core::camera_t::process_mouse_movement(float x_offset,
+                                                    float y_offset,
+                                                    GLboolean constrainpitch) {
   x_offset *= mouse_sensitivity;
   y_offset *= mouse_sensitivity;
 
@@ -83,10 +94,10 @@ void cs7gvx_utils::gl::camera_t::process_mouse_movement(
     }
   }
 
-  update_camera_vectors();
+  update();
 }
 
-void cs7gvx_utils::gl::camera_t::process_mouse_scroll(float y_offset) {
+void figine::core::camera_t::process_mouse_scroll(float y_offset) {
   zoom -= y_offset;
   if (zoom < 1.0f) {
     zoom = 1.0f;
@@ -95,7 +106,7 @@ void cs7gvx_utils::gl::camera_t::process_mouse_scroll(float y_offset) {
   }
 }
 
-void cs7gvx_utils::gl::camera_t::update_camera_vectors() {
+void figine::core::camera_t::update() {
   glm::vec3 front = {cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
                      sin(glm::radians(pitch)),
                      sin(glm::radians(yaw)) * cos(glm::radians(pitch))};

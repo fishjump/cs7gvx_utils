@@ -1,10 +1,10 @@
-#include <cs7gvx_utils/imnotgui/imnotgui.hpp>
+#include "figine/imnotgui/imnotgui.hpp"
 
 #include "imgui-1.86/backends/imgui_impl_glfw.h"
 #include "imgui-1.86/backends/imgui_impl_opengl3.h"
 #include "imgui-1.86/imgui.h"
 
-void cs7gvx_utils::imnotgui::demo_window_t::refresh() {
+void figine::imnotgui::demo_window_t::refresh() {
   {
     static float f = 0.0f;
     static int counter = 0;

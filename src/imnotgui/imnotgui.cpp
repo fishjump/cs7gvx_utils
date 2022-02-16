@@ -1,4 +1,4 @@
-#include <cs7gvx_utils/imnotgui/imnotgui.hpp>
+#include "figine/imnotgui/imnotgui.hpp"
 
 #include <memory>
 #include <unordered_set>
@@ -9,13 +9,13 @@
 
 namespace {
 
-std::unordered_set<cs7gvx_utils::imnotgui::window_t *> windows;
+std::unordered_set<figine::imnotgui::window_t *> windows;
 
 }
 
-cs7gvx_utils::imnotgui::window_t::window_t() {}
+figine::imnotgui::window_t::window_t() {}
 
-void cs7gvx_utils::imnotgui::init(GLFWwindow *window) {
+void figine::imnotgui::init(GLFWwindow *window) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
@@ -23,7 +23,7 @@ void cs7gvx_utils::imnotgui::init(GLFWwindow *window) {
   ImGui_ImplOpenGL3_Init();
 }
 
-void cs7gvx_utils::imnotgui::render() {
+void figine::imnotgui::render() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -36,7 +36,6 @@ void cs7gvx_utils::imnotgui::render() {
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void cs7gvx_utils::imnotgui::register_window(
-    cs7gvx_utils::imnotgui::window_t *window) {
+void figine::imnotgui::register_window(figine::imnotgui::window_t *window) {
   windows.insert(window);
 }

@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "entity.hpp"
@@ -78,45 +79,9 @@ void main() {
 }
 )";
 
-class phong_profile_t final : public figine::core::shader_profile_t {
+class phong_shader_t final : public figine::core::shader_if {
 public:
-  inline phong_profile_t() = default;
-  inline phong_profile_t(const material_t &material, const light_t &light)
-      : material(material), light(light) {}
-
-  material_t material;
-  light_t light;
-
-  inline const figine::core::meta_profile_t &meta() const override {
-    figine::core::shader_profile_t::meta();
-
-    _meta.insert("light.position", light.position);
-    _meta.insert("light.ambient_color", light.ambient_color);
-    _meta.insert("light.diffuse_color", light.diffuse_color);
-    _meta.insert("light.specular_color", light.specular_color);
-
-    _meta.insert("material.shininess", material.shininess);
-    _meta.insert("material.ambient_color", material.ambient_color);
-    _meta.insert("material.diffuse_color", material.diffuse_color);
-    _meta.insert("material.specular_color", material.specular_color);
-
-    return _meta;
-  }
-};
-
-class phong_shader_t final : public figine::core::shader_t<phong_profile_t> {
-public:
-  phong_shader_t(const material_t &material, const light_t &light)
-      : figine::core::shader_t<phong_profile_t>(
-            phong_vs, phong_fs,
-            std::make_shared<phong_profile_t>(material, light)) {}
-
-  phong_shader_t(std::shared_ptr<phong_profile_t> profile = nullptr)
-      : figine::core::shader_t<phong_profile_t>(phong_vs, phong_fs, profile) {
-    if (this->profile == nullptr) {
-      this->profile = std::make_shared<phong_profile_t>();
-    }
-  }
+  phong_shader_t() : figine::core::shader_if(phong_vs, phong_fs) {}
 };
 
 } // namespace figine::builtin::shader

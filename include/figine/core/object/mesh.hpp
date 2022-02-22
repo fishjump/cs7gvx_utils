@@ -12,6 +12,7 @@ namespace figine::core {
 constexpr size_t MAX_BONE_INFLUENCE = 4;
 
 struct vertex_t {
+
   glm::vec3 position;
   glm::vec3 normal;
   glm::vec2 texture_coordinate;
@@ -19,6 +20,15 @@ struct vertex_t {
   glm::vec3 bitangent;
   std::array<int, MAX_BONE_INFLUENCE> bone_ids;
   std::array<float, MAX_BONE_INFLUENCE> bone_weights;
+
+  inline void set_weight(int id, float weight) {
+    for (int i = 0; i < MAX_BONE_INFLUENCE; i++) {
+      bone_ids[i] = id;
+      bone_weights[i] = weight;
+    }
+  }
+
+  inline void init_bones() { set_weight(-1, 0); }
 };
 
 struct texture_t {
@@ -34,7 +44,7 @@ public:
          const std::vector<texture_t> &textures);
 
   void init();
-  void draw(const shader_if *shader) const;
+  void draw(const shader_if &shader) const;
 
 private:
   GLuint _vao = 0;

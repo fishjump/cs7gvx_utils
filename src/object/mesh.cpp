@@ -1,4 +1,5 @@
 #include "figine/core/object/mesh.hpp"
+#include "figine/logging.hpp"
 
 #include <boost/pfr.hpp>
 
@@ -30,15 +31,23 @@ void mesh_t::init() {
                _indices.cbegin().base(), GL_STATIC_DRAW);
 
   const auto b = *_vertices.cbegin();
+
   boost::pfr::for_each_field(b, [&b](const auto &field, int index) {
     glEnableVertexAttribArray(index);
-    glVertexAttribPointer(index, sizeof(field) / sizeof(GL_FLOAT), GL_FLOAT,
-                          GL_FALSE, sizeof(b),
-                          (void *)figine::utils::offset_diff(field, b));
+    if constexpr (std::is_convertible_v<decltype(field),
+                                        decltype(b.bone_ids)>) {
+      glVertexAttribIPointer(index, sizeof(field) / sizeof(GL_INT), GL_INT,
+                             sizeof(b),
+                             (void *)figine::utils::offset_diff(field, b));
+    } else {
+      glVertexAttribPointer(index, sizeof(field) / sizeof(GL_FLOAT), GL_FLOAT,
+                            GL_FALSE, sizeof(b),
+                            (void *)figine::utils::offset_diff(field, b));
+    }
   });
 };
 
-void mesh_t::draw(const shader_if *shader) const {
+void mesh_t::draw(const shader_if &shader) const {
   uint32_t diffuseNr = 1, specularNr = 1, normalNr = 1, heightNr = 1;
   for (size_t i = 0; i < _textures.size(); i++) {
     glActiveTexture(GL_TEXTURE0 + i);
@@ -54,7 +63,7 @@ void mesh_t::draw(const shader_if *shader) const {
     }
 
     glUniform1i(
-        glGetUniformLocation(shader->program_id(), (name + number).c_str()), i);
+        glGetUniformLocation(shader.program_id(), (name + number).c_str()), i);
     glBindTexture(GL_TEXTURE_2D, _textures[i].id);
   }
 

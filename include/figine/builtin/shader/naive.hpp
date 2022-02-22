@@ -38,17 +38,9 @@ void main() {
 }
 )";
 
-class naive_shader_t final
-    : public figine::core::shader_t<figine::core::shader_profile_t> {
+class naive_shader_t final : public figine::core::shader_if {
 public:
-  naive_shader_t(
-      std::shared_ptr<figine::core::shader_profile_t> profile = nullptr)
-      : figine::core::shader_t<figine::core::shader_profile_t>(
-            naive_vs, naive_fs, profile) {
-    if (this->profile == nullptr) {
-      this->profile = std::make_shared<figine::core::shader_profile_t>();
-    }
-  }
+  naive_shader_t() : figine::core::shader_if(naive_vs, naive_fs) {}
 };
 
 } // namespace figine::builtin::shader

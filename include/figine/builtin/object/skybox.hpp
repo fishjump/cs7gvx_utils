@@ -2,21 +2,60 @@
 
 #include "figine/core/camera.hpp"
 #include "figine/core/object.hpp"
+#include "figine/global.hpp"
 #include "figine/logging.hpp"
 #include "stb_image.h"
 
 namespace figine::builtin::object {
 
-class skybox_t : public figine::core::object_t {
+constexpr uint8_t skybox_vs[] = R"(
+#version 330 core
+
+layout(location = 0) in vec3 pos_in;
+
+out vec3 texture_coordinate;
+
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 transform;
+
+void main() {
+  texture_coordinate = pos_in;
+  vec3 frag_pos = vec3(transform * vec4(pos_in, 1.0));
+
+  gl_Position = projection * view * vec4(frag_pos, 1.0);
+}
+)";
+
+constexpr uint8_t skybox_fs[] = R"(
+#version 330 core
+
+out vec4 frag_color;
+
+in vec3 texture_coordinate;
+
+uniform samplerCube skybox;
+
+void main() {
+  frag_color = texture(skybox, texture_coordinate);
+}
+)";
+
+class skybox_t : public figine::core::object_if {
+
 public:
-  // put skybox faces in this order: right, left, top, bottom, front, back
   inline skybox_t(const std::array<std::string, 6> &faces,
-                  const figine::core::shader_if *shader,
                   const figine::core::camera_t *camera,
                   bool gamma_correction = false)
-      : object_t("", shader, camera, gamma_correction), _faces(faces) {}
+      : figine::core::object_if(camera), gamma_correction(gamma_correction),
+        _faces(faces) {}
 
-  void init() override {
+  bool gamma_correction = false;
+  glm::mat4 transform;
+
+  inline void init() override {
+    shader.build();
+
     static float vertices[] = {
         -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
         1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
@@ -72,14 +111,19 @@ public:
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
   }
 
-  void update() override {}
+  inline void update() override {
+    view_pos = camera->position;
+    projection =
+        glm::perspective(glm::radians(camera->zoom),
+                         figine::global::win_mgr::aspect_ratio(), 0.1f, 100.0f);
+    view = camera->view_matrix();
+  }
 
-  void loop() override {
+  void loop(const figine::core::shader_if &shader) override {
     glDepthFunc(GL_LEQUAL);
 
-    shader->use();
-    shader->update(this);
-    shader->apply_profile();
+    update();
+    apply_uniform(shader);
 
     glBindVertexArray(_vao);
     glActiveTexture(GL_TEXTURE0);
@@ -89,7 +133,15 @@ public:
     glDepthFunc(GL_LESS);
   }
 
+  inline void loop() { loop(shader); }
+
 private:
+  class skybox_shader_t final : public figine::core::shader_if {
+  public:
+    inline skybox_shader_t() : figine::core::shader_if(skybox_vs, skybox_fs) {}
+  };
+
+  skybox_shader_t shader;
   GLuint _vao = 0, _box_texture = 0;
   std::array<std::string, 6> _faces;
 };

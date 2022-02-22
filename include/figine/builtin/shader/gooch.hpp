@@ -93,50 +93,9 @@ void main() {
 }
 )";
 
-class gooch_profile_t final : public figine::core::shader_profile_t {
+class gooch_shader_t final : public figine::core::shader_if {
 public:
-  inline gooch_profile_t() = default;
-  inline gooch_profile_t(const material_t &material, const light_t &light)
-      : material(material), light(light) {}
-
-  material_t material;
-  light_t light;
-
-  GLfloat a = 0.2;
-  GLfloat b = 0.6;
-  glm::vec3 k_blue = {0.0f, 0.0f, 0.4f};
-  glm::vec3 k_yellow = {0.4f, 0.4f, 0.0f};
-
-  inline const figine::core::meta_profile_t &meta() const override {
-    figine::core::shader_profile_t::meta();
-
-    _meta.insert("light.position", light.position);
-    _meta.insert("light.ambient_color", light.ambient_color);
-    _meta.insert("light.diffuse_color", light.diffuse_color);
-    _meta.insert("light.specular_color", light.specular_color);
-
-    _meta.insert("material.shininess", material.shininess);
-    _meta.insert("material.ambient_color", material.ambient_color);
-    _meta.insert("material.diffuse_color", material.diffuse_color);
-    _meta.insert("material.specular_color", material.specular_color);
-
-    _meta.insert("a", a);
-    _meta.insert("b", b);
-    _meta.insert("k_blue", k_blue);
-    _meta.insert("k_yellow", k_yellow);
-
-    return _meta;
-  }
-};
-
-class gooch_shader_t final : public figine::core::shader_t<gooch_profile_t> {
-public:
-  gooch_shader_t(std::shared_ptr<gooch_profile_t> profile = nullptr)
-      : figine::core::shader_t<gooch_profile_t>(gooch_vs, gooch_fs, profile) {
-    if (this->profile == nullptr) {
-      this->profile = std::make_shared<gooch_profile_t>();
-    }
-  }
+  gooch_shader_t() : figine::core::shader_if(gooch_vs, gooch_fs) {}
 };
 
 } // namespace figine::builtin::shader

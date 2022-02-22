@@ -1,6 +1,8 @@
 #include "figine/core/shader.hpp"
 #include "shader_utils.hpp"
 
+#include <fstream>
+
 namespace figine::core {
 
 std::string load_shader_code(const std::string &file) {

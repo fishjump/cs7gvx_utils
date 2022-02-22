@@ -7,8 +7,6 @@
 
 namespace figine::core {
 
-class object_t;
-
 class shader_if {
 public:
   shader_if(const uint8_t *vert_code, const uint8_t *frag_code);
@@ -16,10 +14,6 @@ public:
   void use() const;
   void build() const;
   GLuint program_id() const;
-
-  virtual void init(const object_t *obj) const = 0;
-  virtual void update(const object_t *obj) const = 0;
-  virtual void apply_profile() const = 0;
 
   template <class U>
   void set_uniform(const std::string &name, const U &t) const {

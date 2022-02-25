@@ -4,5 +4,4 @@
 #include "object/animator.hpp"
 #include "object/bone.hpp"
 #include "object/mesh.hpp"
-#include "object/node.hpp"
 #include "object/object.hpp"

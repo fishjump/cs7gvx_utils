@@ -1,7 +1,6 @@
 #pragma once
 
 #include "bone.hpp"
-#include "node.hpp"
 #include "object.hpp"
 
 #include <unordered_map>
@@ -13,7 +12,7 @@ public:
   float duration;
   int ticks_per_second;
   std::vector<bone_t> bones;
-  assimp_node_data_t root;
+  bone_data_t root;
   std::unordered_map<std::string, bone_info_t> bone_info_map;
 
   animation_t() = default;
@@ -22,7 +21,7 @@ public:
 
 private:
   void read_missing_bones(const aiAnimation *animation, object_t &obj);
-  void read_heirarchy_data(assimp_node_data_t &dest, const aiNode *src);
+  void read_heirarchy_data(bone_data_t &dest, const aiNode *src);
 };
 
 } // namespace figine::core

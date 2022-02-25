@@ -24,9 +24,8 @@ animation_t::animation_t(const std::string &file, object_t &object) {
 
 bone_t *animation_t::find_bone(const std::string &name) {
   auto iter =
-      std::find_if(bones.begin(), bones.end(), [&](const bone_t &bone_t) {
-        return bone_t.name == name;
-      });
+      std::find_if(bones.begin(), bones.end(),
+                   [&](const bone_t &bone_t) { return bone_t.name == name; });
 
   if (iter == bones.end()) {
     return nullptr;
@@ -54,8 +53,7 @@ void animation_t::read_missing_bones(const aiAnimation *animation,
   this->bone_info_map = bone_info_map;
 }
 
-void animation_t::read_heirarchy_data(assimp_node_data_t &dest,
-                                      const aiNode *src) {
+void animation_t::read_heirarchy_data(bone_data_t &dest, const aiNode *src) {
   assert(src);
 
   dest.name = src->mName.data;
@@ -63,9 +61,9 @@ void animation_t::read_heirarchy_data(assimp_node_data_t &dest,
       _object_internal::assimp_mat_to_gml_mat(src->mTransformation);
 
   for (int i = 0; i < src->mNumChildren; i++) {
-    assimp_node_data_t newData;
-    read_heirarchy_data(newData, src->mChildren[i]);
-    dest.children.push_back(newData);
+    bone_data_t new_data;
+    read_heirarchy_data(new_data, src->mChildren[i]);
+    dest.children.push_back(new_data);
   }
 }
 

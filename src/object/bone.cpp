@@ -12,7 +12,7 @@ bone_t::bone_t(const std::string &name, int id, const aiNodeAnim *channel)
     key_position_t data = {
         .position = _object_internal::assimp_vec3_to_glm_vec3(
             channel->mPositionKeys[i].mValue),
-        .timestamp = channel->mPositionKeys[i].mTime,
+        .timestamp = (float)channel->mPositionKeys[i].mTime,
     };
 
     positions.push_back(data);
@@ -22,7 +22,7 @@ bone_t::bone_t(const std::string &name, int id, const aiNodeAnim *channel)
     key_rotation_t data = {
         .orientation = _object_internal::assimp_quat_to_glm_quat(
             channel->mRotationKeys[i].mValue),
-        .timestamp = channel->mRotationKeys[i].mTime,
+        .timestamp = (float)channel->mRotationKeys[i].mTime,
     };
 
     rotations.push_back(data);
@@ -32,7 +32,7 @@ bone_t::bone_t(const std::string &name, int id, const aiNodeAnim *channel)
     key_scale_t data = {
         .scale = _object_internal::assimp_vec3_to_glm_vec3(
             channel->mScalingKeys[i].mValue),
-        .timestamp = channel->mScalingKeys[i].mTime,
+        .timestamp = (float)channel->mScalingKeys[i].mTime,
     };
 
     scales.push_back(data);

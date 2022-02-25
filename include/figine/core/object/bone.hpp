@@ -23,6 +23,12 @@ struct key_scale_t {
   float timestamp;
 };
 
+struct bone_data_t {
+  glm::mat4 transform;
+  std::string name;
+  std::vector<bone_data_t> children;
+};
+
 struct bone_info_t {
   int id;
   glm::mat4 offset;
@@ -37,11 +43,14 @@ public:
 
   glm::mat4 local_transform;
 
+  std::vector<key_position_t> positions;
+  std::vector<key_rotation_t> rotations;
+  std::vector<key_scale_t> scales;
+
   void update(float animation_time);
 
 private:
-  float get_scale_factor(float last_ts, float next_ts,
-                       float animation_time);
+  float get_scale_factor(float last_ts, float next_ts, float animation_time);
 
   int get_position_index(float animation_time);
   int get_rotation_index(float animation_time);
@@ -50,10 +59,6 @@ private:
   glm::mat4 interpolate_position(float animation_time);
   glm::mat4 interpolate_rotation(float animation_time);
   glm::mat4 interpolate_scaling(float animation_time);
-
-  std::vector<key_position_t> positions;
-  std::vector<key_rotation_t> rotations;
-  std::vector<key_scale_t> scales;
 };
 
 } // namespace figine::core

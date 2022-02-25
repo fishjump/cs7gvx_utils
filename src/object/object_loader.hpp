@@ -120,6 +120,8 @@ load_mesh(std::unordered_map<std::string, bone_info_t> &bone_info_map,
   std::vector<uint32_t> indices;
   std::vector<figine::core::texture_t> textures;
 
+// mesh->mBones->
+
   for (size_t i = 0; i < mesh->mNumVertices; i++) {
     figine::core::vertex_t vertex{
         .position = {mesh->mVertices[i].x, mesh->mVertices[i].y,
@@ -178,10 +180,11 @@ load_mesh(std::unordered_map<std::string, bone_info_t> &bone_info_map,
   return figine::core::mesh_t(vertices, indices, textures);
 }
 
-inline void load_node(std::vector<figine::core::mesh_t> &meshes,
-                      std::unordered_map<std::string, bone_info_t> &bone_info_map,
-                      const std::string &cwd, aiNode *node,
-                      const aiScene *scene, bool gamma_correction) {
+inline void
+load_node(std::vector<figine::core::mesh_t> &meshes,
+          std::unordered_map<std::string, bone_info_t> &bone_info_map,
+          const std::string &cwd, aiNode *node, const aiScene *scene,
+          bool gamma_correction) {
   for (size_t i = 0; i < node->mNumMeshes; i++) {
     aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
     meshes.push_back(

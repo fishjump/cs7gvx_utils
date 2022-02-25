@@ -18,9 +18,12 @@ public:
 
   void update(float dt);
   void set_animation(animation_t *animation);
+  void exec(const std::unordered_map<std::string, glm::mat4> target_map);
 
 private:
-  void calc(const assimp_node_data_t *node, glm::mat4 parent_transform);
+  void calc(const bone_data_t *node, glm::mat4 parent_transform);
+  void calc_exec(const bone_data_t *node, glm::mat4 parent_transform,
+                 const std::unordered_map<std::string, glm::mat4> &target_map);
 
   animation_t *current_animation;
   float current_time;

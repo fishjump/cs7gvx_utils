@@ -9,7 +9,6 @@ namespace figine::imnotgui {
 
 class window_t {
 public:
-  window_t();
   virtual void refresh() = 0;
 };
 

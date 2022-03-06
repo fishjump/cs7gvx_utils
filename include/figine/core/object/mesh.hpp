@@ -46,9 +46,9 @@ public:
   void init();
   void draw(const shader_if &shader) const;
 
-private:
-  GLuint _vao = 0;
+  GLuint vao = 0;
 
+private:
   std::vector<vertex_t> _vertices;
   std::vector<uint32_t> _indices;
   std::vector<texture_t> _textures;

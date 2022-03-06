@@ -13,8 +13,6 @@ std::unordered_set<figine::imnotgui::window_t *> windows;
 
 }
 
-figine::imnotgui::window_t::window_t() {}
-
 void figine::imnotgui::init(GLFWwindow *window) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();

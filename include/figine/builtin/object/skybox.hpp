@@ -48,10 +48,11 @@ public:
                   const figine::core::camera_t *camera,
                   bool gamma_correction = false)
       : figine::core::object_if(camera), gamma_correction(gamma_correction),
-        _faces(faces) {}
+        faces(faces) {}
 
   bool gamma_correction = false;
   glm::mat4 transform;
+  std::array<std::string, 6> faces;
 
   inline void init() override {
     shader.build();
@@ -91,16 +92,16 @@ public:
     glBindTexture(GL_TEXTURE_CUBE_MAP, _box_texture);
 
     int width, height, nr_components;
-    for (size_t i = 0; i < _faces.size(); i++) {
+    for (size_t i = 0; i < faces.size(); i++) {
       uint8_t *data =
-          stbi_load(_faces[i].c_str(), &width, &height, &nr_components, 0);
+          stbi_load(faces[i].c_str(), &width, &height, &nr_components, 0);
       defer(stbi_image_free(data));
       if (data) {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width,
                      height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
       } else {
         LOG_ERR("cubemap texture failed to load at path: %s",
-                _faces[i].c_str());
+                faces[i].c_str());
       }
     }
 
@@ -143,7 +144,6 @@ private:
 
   skybox_shader_t shader;
   GLuint _vao = 0, _box_texture = 0;
-  std::array<std::string, 6> _faces;
 };
 
 } // namespace figine::builtin::object

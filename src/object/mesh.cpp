@@ -10,12 +10,12 @@ mesh_t::mesh_t(const std::vector<vertex_t> &vertices,
     : _vertices(vertices), _indices(indices), _textures(textures) {}
 
 void mesh_t::init() {
-  glGenVertexArrays(1, &_vao);
+  glGenVertexArrays(1, &vao);
   GLuint _vbo = 0, _ebo = 0;
   glGenBuffers(1, &_vbo);
   glGenBuffers(1, &_ebo);
 
-  glBindVertexArray(_vao);
+  glBindVertexArray(vao);
   defer(glBindVertexArray(NULL));
 
   glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -67,7 +67,7 @@ void mesh_t::draw(const shader_if &shader) const {
     glBindTexture(GL_TEXTURE_2D, _textures[i].id);
   }
 
-  glBindVertexArray(_vao);
+  glBindVertexArray(vao);
   defer(glBindVertexArray(NULL));
 
   glDrawElements(GL_TRIANGLES, (uint32_t)_indices.size(), GL_UNSIGNED_INT, 0);

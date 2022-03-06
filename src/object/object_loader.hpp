@@ -86,6 +86,7 @@ load_material_textures(const std::string &cwd, aiMaterial *mat,
     textures.push_back(texture);
     _textures_cache.insert({texture.path, texture});
   }
+
   return textures;
 }
 
@@ -119,8 +120,6 @@ load_mesh(std::unordered_map<std::string, bone_info_t> &bone_info_map,
   std::vector<figine::core::vertex_t> vertices;
   std::vector<uint32_t> indices;
   std::vector<figine::core::texture_t> textures;
-
-// mesh->mBones->
 
   for (size_t i = 0; i < mesh->mNumVertices; i++) {
     figine::core::vertex_t vertex{

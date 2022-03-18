@@ -35,17 +35,17 @@
 #define LOG_WRAN(fmt, ...)                                                     \
   do {                                                                         \
     LOG(LOG_LEVEL_WRAN, "[WRAN][%s] at %s:%d: " fmt, __FUNCTION__, __FILE__,   \
-        __LINE__, __VA_ARGS__);                                                \
+        __LINE__, ##__VA_ARGS__);                                                \
   } while (false);
 
 #define LOG_INFO(fmt, ...)                                                     \
   do {                                                                         \
     LOG(LOG_LEVEL_INFO, "[INFO][%s] at %s:%d: " fmt, __FUNCTION__, __FILE__,   \
-        __LINE__, __VA_ARGS__);                                                \
+        __LINE__, ##__VA_ARGS__);                                                \
   } while (false);
 
 #define LOG_DEBUG(fmt, ...)                                                    \
   do {                                                                         \
     LOG(LOG_LEVEL_DEBUG, "[DEBUG][%s] at %s:%d: " fmt, __FUNCTION__, __FILE__, \
-        __LINE__, __VA_ARGS__);                                                \
+        __LINE__, ##__VA_ARGS__);                                                \
   } while (false);

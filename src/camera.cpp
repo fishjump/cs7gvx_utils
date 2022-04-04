@@ -39,15 +39,27 @@ void figine::core::camera_t::process_keyboard(camera_movement_t direction,
   float velocity = 0.005;
   switch (direction) {
   case camera_movement_t::FORWARD:
-    position += front * velocity;
+    if (_lock) {
+      position =
+          glm::vec4(position, 1.0) *
+          glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {1.0f, 0.0f, 0.0f});
+    } else {
+      position += front * velocity;
+    }
     break;
   case camera_movement_t::BACKWARD:
-    position += -front * velocity;
+    if (_lock) {
+      position =
+          glm::vec4(position, 1.0) *
+          glm::rotate(glm::mat4(1.0f), glm::radians(-1.0f), {1.0f, 0.0f, 0.0f});
+    } else {
+      position += -front * velocity;
+    }
     break;
   case camera_movement_t::LEFT:
     if (_lock) {
       position =
-          glm::vec4(position, 0) *
+          glm::vec4(position, 1.0) *
           glm::rotate(glm::mat4(1.0f), glm::radians(-1.0f), {0.0f, 1.0f, 0.0f});
     } else {
       position += glm::vec3{0, 0, -1} * velocity;
@@ -56,7 +68,7 @@ void figine::core::camera_t::process_keyboard(camera_movement_t direction,
   case camera_movement_t::RIGHT:
     if (_lock) {
       position =
-          glm::vec4(position, 0) *
+          glm::vec4(position, 1.0) *
           glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {0.0f, 1.0f, 0.0f});
     } else {
       position += glm::vec3{0, 0, 1} * velocity;

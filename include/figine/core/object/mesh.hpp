@@ -48,7 +48,7 @@ public:
 
   GLuint vao = 0;
 
-private:
+// private:
   std::vector<vertex_t> _vertices;
   std::vector<uint32_t> _indices;
   std::vector<texture_t> _textures;

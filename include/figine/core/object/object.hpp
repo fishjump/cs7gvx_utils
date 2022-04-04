@@ -55,7 +55,7 @@ public:
   void loop(const shader_if &shader) override;
   void apply_uniform(const shader_if &shader) override;
 
-protected:
+// protected:
   mutable std::vector<mesh_t> _meshes;
 
 private:
